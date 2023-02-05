@@ -9,7 +9,7 @@ Genereaza automat pontajul la o persoana tinand cont de zilele libere legale.
 
 ### Demo
 
-[]()
+[https://pontaj-angajati.netlify.app](https://pontaj-angajati.netlify.app)
 
 ### Cum functioneaza
 
