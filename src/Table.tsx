@@ -8,6 +8,7 @@ import {
   weekDay,
   getStartHour,
   getEndHour,
+  isHoloday,
 } from './dateHelpers';
 import { useScheduleContext } from './useScheduleContext';
 
@@ -24,6 +25,19 @@ export const Table = () => {
 
   const holodays = data?.map(({ date }) => formatDate(new Date(date)));
 
+  const totalHours = () => {
+    const duration = (day: number) =>
+      +schedule[new Date(year, month - 1, day).getDay()]?.duration?.split(
+        'h'
+      )[0] || 0;
+
+    const total = monthDays
+      .filter((day) => !isHoloday(new Date(year, month - 1, day), holodays))
+      .reduce((acc, day) => duration(day) + acc, 0);
+
+    return `${total}h`;
+  };
+
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'error') return <div>Error</div>;
 
@@ -31,7 +45,12 @@ export const Table = () => {
     <table>
       <thead>
         <tr>
-          <th></th>
+          <th>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span>Total</span>
+              <span>{totalHours()}</span>
+            </div>
+          </th>
           {monthDays.map((day) => (
             <th key={day}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>

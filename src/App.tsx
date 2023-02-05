@@ -1,7 +1,7 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { ComponentToPrint } from './ComponentToPrint';
-import { Schedule } from './Schedule';
+import { HeaderDates } from './HeaderDates';
 import { FolderPagesProvider } from './useScheduleContext';
 
 import './styles.css';
@@ -13,10 +13,25 @@ function App() {
     content: () => componentRef.current || null,
   });
 
+  useEffect(() => {
+    const printEvent = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        e.preventDefault();
+        handlePrint();
+      }
+    };
+
+    window.addEventListener('keydown', (e) => printEvent(e));
+
+    return () => {
+      window.removeEventListener('keydown', printEvent);
+    };
+  }, []);
+
   return (
     <FolderPagesProvider>
       <div style={{ display: 'flex', gap: '15px' }}>
-        <Schedule />
+        <HeaderDates />
         <button className='print-btn' onClick={handlePrint}>
           Print
         </button>

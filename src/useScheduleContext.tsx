@@ -37,39 +37,39 @@ const defaultScheduleContext = {
 
 const initialSchedule: WeekSchedule = {
   0: {
-    duration: '15h',
+    duration: '10h',
     start: '07:00',
-    end: '22:00',
+    end: '17:00',
   },
   1: {
-    duration: '2h',
-    start: '06:00',
-    end: '08:00',
+    duration: '4h',
+    start: '05:00',
+    end: '09:00',
   },
   2: {
-    duration: '2h',
-    start: '06:00',
-    end: '08:00',
+    duration: '4h',
+    start: '05:00',
+    end: '09:00',
   },
   3: {
-    duration: '2h',
-    start: '06:00',
-    end: '08:00',
+    duration: '4h',
+    start: '05:00',
+    end: '09:00',
   },
   4: {
-    duration: '2h',
-    start: '06:00',
-    end: '08:00',
+    duration: '4h',
+    start: '05:00',
+    end: '09:00',
   },
   5: {
-    duration: '2h',
-    start: '06:00',
-    end: '08:00',
+    duration: '4h',
+    start: '05:00',
+    end: '09:00',
   },
   6: {
-    duration: '15h',
+    duration: '10h',
     start: '07:00',
-    end: '22:00',
+    end: '17:00',
   },
 };
 

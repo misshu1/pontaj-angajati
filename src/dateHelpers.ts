@@ -53,7 +53,7 @@ export const getHours = (
 ): string => {
   if (isHoloday(date, holodays)) return '';
 
-  return schedule[date.getDay()].duration;
+  return schedule[date.getDay()]?.duration ?? '';
 };
 
 export const getStartHour = (
@@ -63,7 +63,7 @@ export const getStartHour = (
 ) => {
   if (isHoloday(date, holodays)) return '';
 
-  return schedule[date.getDay()].start;
+  return schedule[date.getDay()]?.start ?? '';
 };
 
 export const getEndHour = (
@@ -73,5 +73,5 @@ export const getEndHour = (
 ) => {
   if (isHoloday(date, holodays)) return '';
 
-  return schedule[date.getDay()].end;
+  return schedule[date.getDay()]?.end ?? '';
 };

@@ -1,6 +1,6 @@
 import { useScheduleContext } from './useScheduleContext';
 
-export const Schedule = () => {
+export const HeaderDates = () => {
   const { employee, updateEnployee, updateMonth, updateYear } =
     useScheduleContext();
 
