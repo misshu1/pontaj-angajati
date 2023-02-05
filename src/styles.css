@@ -1,0 +1,109 @@
+html, body {
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+    table-layout: fixed;
+    padding: 0;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+thead tr {
+    background-color: #ccc;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #e9e7e7;
+}
+
+tbody tr td  {
+   height: 30px;
+   padding: 3px;
+}
+
+tbody tr td:first-child  {
+    font-weight: bold;
+}
+
+tbody tr td:not(:first-child)  {
+    text-align: center;
+}
+
+table, th, td {
+    border: 1px solid #202020;
+}
+
+input[type=text], select {
+    width: 200px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+.print-btn {
+    background-color: #009bce;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0 8px auto;
+    padding: 0 50px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.print-btn:hover {
+    background-color: #0668c9;
+}
+
+@media print {
+    html, body {
+        font-size: 9px;
+        font-family: 'Roboto', sans-serif;
+        box-sizing: border-box;
+        display: table;
+        table-layout: fixed;
+        /* margin: 10px; */
+        margin: 10pt ;
+        padding: 0;
+        height: auto;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+    
+    thead tr {
+        background-color: #ccc;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #e9e7e7;
+    }
+
+    tbody tr td  {
+       height: 30px;
+       padding: 3px;
+    }
+
+    tbody tr td:first-child  {
+        font-weight: bold;
+    }
+
+    tbody tr td:not(:first-child)  {
+        text-align: center;
+    }
+
+    table, th, td {
+        border: 1px solid #202020;
+    }
+
+    @page { 
+        /* size: 11.69in 8.27in; */
+        size: A4 landscape;
+        margin: 5mm;
+    }
+}
