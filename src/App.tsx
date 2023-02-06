@@ -5,6 +5,7 @@ import { HeaderDates } from './HeaderDates';
 import { FolderPagesProvider } from './useScheduleContext';
 
 import './styles.css';
+import { Button } from '@chakra-ui/react';
 
 function App() {
   const componentRef = useRef(null);
@@ -32,9 +33,14 @@ function App() {
     <FolderPagesProvider>
       <div style={{ display: 'flex', gap: '15px' }}>
         <HeaderDates />
-        <button className='print-btn' onClick={handlePrint}>
+        <Button
+          colorScheme='yellow'
+          size='lg'
+          margin='27px 15px 0 auto'
+          onClick={handlePrint}
+        >
           Print
-        </button>
+        </Button>
       </div>
       <ComponentToPrint ref={componentRef} />
     </FolderPagesProvider>

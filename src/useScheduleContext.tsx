@@ -31,7 +31,7 @@ const defaultScheduleContext = {
   updateYear: () => {},
   updateMonth: () => {},
   updateSchedule: () => {},
-  month: 1,
+  month: new Date().getMonth() + 1,
   year: new Date().getFullYear(),
 };
 
@@ -79,7 +79,7 @@ const ScleduleContext = createContext<ScleduleContextType>(
 export const FolderPagesProvider = ({ children }: { children: ReactNode }) => {
   const [schedule, setSchedule] = useState<WeekSchedule>(initialSchedule);
   const [employee, setEmployee] = useState<string>('');
-  const [month, setMonth] = useState(new Date().getMonth());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
 
   const updateSchedule = ({

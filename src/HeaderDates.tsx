@@ -1,45 +1,62 @@
+import { Button, Input, Select, Stack } from '@chakra-ui/react';
+import { AddSchedule } from './AddSchedule';
+import { monthsListNames, monthsListValue, yearsList } from './dateHelpers';
 import { useScheduleContext } from './useScheduleContext';
 
 export const HeaderDates = () => {
-  const { employee, updateEnployee, updateMonth, updateYear } =
+  const { employee, updateEnployee, updateMonth, updateYear, month, year } =
     useScheduleContext();
 
-  const yearsList = Array.from(
-    { length: 5 },
-    (_, i) => new Date().getFullYear() - i
-  );
-
   return (
-    <div style={{ display: 'flex', gap: '15px' }}>
-      <input
+    <Stack
+      spacing={3}
+      display='grid'
+      gridTemplateColumns='repeat(4, 1fr)'
+      gap='15px'
+      padding='15px'
+    >
+      <Input
+        placeholder='Nume Angajat'
         type='text'
         value={employee}
         onChange={(e) => updateEnployee(e.target.value)}
-        placeholder='Nume Angajat'
+        size='lg'
+        marginTop='12px'
       />
-
-      <select name='month' onChange={(e) => updateMonth(+e.target.value)}>
-        <option value='1'>Ianuarie</option>
-        <option value='2'>Februarie</option>
-        <option value='3'>Martie</option>
-        <option value='4'>Aprilie</option>
-        <option value='5'>Mai</option>
-        <option value='6'>Iunie</option>
-        <option value='7'>Iulie</option>
-        <option value='8'>August</option>
-        <option value='9'>Septembrie</option>
-        <option value='10'>Octombrie</option>
-        <option value='11'>Noiembrie</option>
-        <option value='12'>Decembrie</option>
-      </select>
-
-      <select name='year' onChange={(e) => updateYear(+e.target.value)}>
+      <Select
+        size='lg'
+        name='month'
+        onChange={(e) => updateMonth(+e.target.value)}
+        value={month}
+      >
+        {monthsListValue.map((monthNumber, index) => (
+          <option value={monthNumber} key={monthNumber}>
+            {monthsListNames[index]}
+          </option>
+        ))}
+      </Select>
+      <Select
+        size='lg'
+        name='year'
+        onChange={(e) => updateYear(+e.target.value)}
+        value={year}
+      >
         {yearsList.map((year) => (
           <option value={year} key={year}>
             {year}
           </option>
         ))}
-      </select>
-    </div>
+      </Select>
+      <AddSchedule>
+        <Button
+          colorScheme='green'
+          size='lg'
+          margin='27px 15px 0 0'
+          width='100%'
+        >
+          Adauga Program
+        </Button>
+      </AddSchedule>
+    </Stack>
   );
 };

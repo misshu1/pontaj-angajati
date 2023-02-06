@@ -1,4 +1,11 @@
-import { useState } from 'react';
+import {
+  Table as ChackraTable,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+} from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchFreeDays } from './requests';
 import {
@@ -42,53 +49,53 @@ export const Table = () => {
   if (status === 'error') return <div>Error</div>;
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>
+    <ChackraTable variant='striped'>
+      <Thead>
+        <Tr>
+          <Th>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span>Total</span>
               <span>{totalHours()}</span>
             </div>
-          </th>
+          </Th>
           {monthDays.map((day) => (
-            <th key={day}>
+            <Th key={day}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span>{weekDay(new Date(year, month - 1, day))}</span>
                 <span>
                   {day}/{monthName(new Date(year, month - 1, day))}
                 </span>
               </div>
-            </th>
+            </Th>
           ))}
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Inceput</td>
+        </Tr>
+      </Thead>
+      <Tbody>
+        <Tr>
+          <Td>Inceput</Td>
           {monthDays.map((day) => (
-            <td key={day}>
+            <Td key={day}>
               {getStartHour(new Date(year, month - 1, day), schedule, holodays)}
-            </td>
+            </Td>
           ))}
-        </tr>
-        <tr>
-          <td>Sfarsit</td>
+        </Tr>
+        <Tr>
+          <Td>Sfarsit</Td>
           {monthDays.map((day) => (
-            <td key={day}>
+            <Td key={day}>
               {getEndHour(new Date(year, month - 1, day), schedule, holodays)}
-            </td>
+            </Td>
           ))}
-        </tr>
-        <tr>
-          <td>Ore</td>
+        </Tr>
+        <Tr>
+          <Td>Ore</Td>
           {monthDays.map((day) => (
-            <td key={day}>
+            <Td key={day}>
               {getHours(new Date(year, month - 1, day), schedule, holodays)}
-            </td>
+            </Td>
           ))}
-        </tr>
-      </tbody>
-    </table>
+        </Tr>
+      </Tbody>
+    </ChackraTable>
   );
 };
