@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import {
   Table as ChackraTable,
   Thead,
@@ -5,6 +7,9 @@ import {
   Tr,
   Th,
   Td,
+  TableCaption,
+  Text,
+  Stack,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchFreeDays } from './requests';
@@ -15,9 +20,13 @@ import {
   weekDay,
   getStartHour,
   getEndHour,
-  isHoloday,
 } from './dateHelpers';
 import { useScheduleContext } from './useScheduleContext';
+import { DayScheduleConst } from './models';
+import { SCHEDULE_LEGEND } from './data';
+
+const MONTH_HOURS_LIMIT = 160;
+let totalHours: number = 0;
 
 export const Table = () => {
   const { month, year, schedule } = useScheduleContext();
@@ -30,19 +39,54 @@ export const Table = () => {
     fetchFreeDays(year)
   );
 
-  const holodays = data?.map(({ date }) => formatDate(new Date(date)));
+  useEffect(() => {
+    totalHours = 0;
+  }, [month]);
 
-  const totalHours = () => {
-    const duration = (day: number) =>
-      +schedule[new Date(year, month - 1, day).getDay()]?.duration?.split(
-        'h'
-      )[0] || 0;
+  const handleRenderValue = (
+    day: number,
+    info: keyof typeof DayScheduleConst
+  ) => {
+    const holodays = data?.map(({ date }) => formatDate(new Date(date)));
 
-    const total = monthDays
-      .filter((day) => !isHoloday(new Date(year, month - 1, day), holodays))
-      .reduce((acc, day) => duration(day) + acc, 0);
+    switch (info) {
+      case DayScheduleConst.duration: {
+        if (totalHours < MONTH_HOURS_LIMIT) {
+          const duration = (day: number) =>
+            +schedule[new Date(year, month - 1, day).getDay()]?.duration?.split(
+              'h'
+            )[0] || 0;
 
-    return `${total}h`;
+          totalHours += duration(day);
+        }
+
+        return getHours(
+          new Date(year, month - 1, day),
+          schedule,
+          holodays,
+          totalHours < MONTH_HOURS_LIMIT
+        );
+      }
+      case DayScheduleConst.start: {
+        return getStartHour(
+          new Date(year, month - 1, day),
+          schedule,
+          holodays,
+          totalHours < MONTH_HOURS_LIMIT
+        );
+      }
+      case DayScheduleConst.end: {
+        return getEndHour(
+          new Date(year, month - 1, day),
+          schedule,
+          holodays,
+          totalHours < MONTH_HOURS_LIMIT
+        );
+      }
+
+      default:
+        return '';
+    }
   };
 
   if (status === 'loading') return <div>Loading...</div>;
@@ -50,12 +94,48 @@ export const Table = () => {
 
   return (
     <ChackraTable variant='striped'>
+      <TableCaption textAlign='left'>
+        <Text
+          fontSize='sm'
+          color='#000'
+          as='span'
+          margin='0 !important'
+          fontWeight={900}
+        >
+          Legenda
+        </Text>
+        <Stack
+          display='grid'
+          gridTemplateColumns='repeat(3, 200px)'
+          gridTemplateRows='repeat(4, 20px)'
+        >
+          {SCHEDULE_LEGEND.map((item) => (
+            <Text
+              key={item.id}
+              fontSize='sm'
+              color='#909090'
+              as='span'
+              margin='0 !important'
+            >
+              <Text
+                textTransform='uppercase'
+                fontWeight={900}
+                color='#000'
+                as='span'
+              >
+                {item.id}
+              </Text>{' '}
+              - {item.name}
+            </Text>
+          ))}
+        </Stack>
+      </TableCaption>
       <Thead>
         <Tr>
           <Th>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span>Total</span>
-              <span>{totalHours()}</span>
+              <span>{totalHours}h</span>
             </div>
           </Th>
           {monthDays.map((day) => (
@@ -74,24 +154,20 @@ export const Table = () => {
         <Tr>
           <Td>Inceput</Td>
           {monthDays.map((day) => (
-            <Td key={day}>
-              {getStartHour(new Date(year, month - 1, day), schedule, holodays)}
-            </Td>
+            <Td key={day}>{handleRenderValue(day, DayScheduleConst.start)}</Td>
           ))}
         </Tr>
         <Tr>
           <Td>Sfarsit</Td>
           {monthDays.map((day) => (
-            <Td key={day}>
-              {getEndHour(new Date(year, month - 1, day), schedule, holodays)}
-            </Td>
+            <Td key={day}>{handleRenderValue(day, DayScheduleConst.end)}</Td>
           ))}
         </Tr>
         <Tr>
           <Td>Ore</Td>
           {monthDays.map((day) => (
             <Td key={day}>
-              {getHours(new Date(year, month - 1, day), schedule, holodays)}
+              {handleRenderValue(day, DayScheduleConst.duration)}
             </Td>
           ))}
         </Tr>

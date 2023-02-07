@@ -1,14 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-
-interface DaySchedule {
-  start: string;
-  end: string;
-  duration: string;
-}
-
-export interface WeekSchedule {
-  [key: number]: DaySchedule;
-}
+import { initialSchedule } from './data';
+import { WeekSchedule, DaySchedule } from './models';
 
 interface ScleduleContextType {
   schedule: WeekSchedule;
@@ -33,44 +25,6 @@ const defaultScheduleContext = {
   updateSchedule: () => {},
   month: new Date().getMonth() + 1,
   year: new Date().getFullYear(),
-};
-
-const initialSchedule: WeekSchedule = {
-  0: {
-    duration: '10h',
-    start: '07:00',
-    end: '17:00',
-  },
-  1: {
-    duration: '4h',
-    start: '05:00',
-    end: '09:00',
-  },
-  2: {
-    duration: '4h',
-    start: '05:00',
-    end: '09:00',
-  },
-  3: {
-    duration: '4h',
-    start: '05:00',
-    end: '09:00',
-  },
-  4: {
-    duration: '4h',
-    start: '05:00',
-    end: '09:00',
-  },
-  5: {
-    duration: '4h',
-    start: '05:00',
-    end: '09:00',
-  },
-  6: {
-    duration: '10h',
-    start: '07:00',
-    end: '17:00',
-  },
 };
 
 const ScleduleContext = createContext<ScleduleContextType>(

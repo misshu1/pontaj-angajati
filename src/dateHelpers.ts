@@ -1,4 +1,4 @@
-import { WeekSchedule } from './useScheduleContext';
+import { WeekSchedule } from './models';
 
 export const formatDate = (date: Date): string => {
   const options = {
@@ -49,9 +49,10 @@ export const monthName = (date: Date): string => {
 export const getHours = (
   date: Date,
   schedule: WeekSchedule,
-  holodays: string[] | undefined
+  holodays: string[] | undefined,
+  isOverTime: boolean
 ): string => {
-  if (isHoloday(date, holodays)) return '';
+  if (isHoloday(date, holodays) || isOverTime) return '';
 
   return schedule[date.getDay()]?.duration ?? '';
 };
@@ -59,9 +60,10 @@ export const getHours = (
 export const getStartHour = (
   date: Date,
   schedule: WeekSchedule,
-  holodays: string[] | undefined
+  holodays: string[] | undefined,
+  isOverTime: boolean
 ) => {
-  if (isHoloday(date, holodays)) return '';
+  if (isHoloday(date, holodays) || isOverTime) return '';
 
   return schedule[date.getDay()]?.start ?? '';
 };
@@ -69,9 +71,10 @@ export const getStartHour = (
 export const getEndHour = (
   date: Date,
   schedule: WeekSchedule,
-  holodays: string[] | undefined
+  holodays: string[] | undefined,
+  isOverTime: boolean
 ) => {
-  if (isHoloday(date, holodays)) return '';
+  if (isHoloday(date, holodays) || isOverTime) return '';
 
   return schedule[date.getDay()]?.end ?? '';
 };

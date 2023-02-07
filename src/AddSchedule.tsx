@@ -44,7 +44,7 @@ export const AddSchedule: FC<AddScheduleProps> = ({ children }) => {
             Adauga Program Saptamanal
           </PopoverHeader>
           <PopoverCloseButton />
-          <PopoverBody>something</PopoverBody>
+          <PopoverBody>coming soon</PopoverBody>
           <PopoverFooter display='flex' justifyContent='flex-end' gap='16px'>
             <Button colorScheme='red' size='sm' onClick={onClose}>
               Inchide
