@@ -30,13 +30,14 @@ function App() {
 
   return (
     <>
-      <div style={{ display: 'flex', gap: '15px' }}>
+      <div style={{ display: 'flex', gap: '15px', overflow: 'auto' }}>
         <HeaderDates />
         <Button
           colorScheme='yellow'
           size='lg'
           margin='27px 15px 0 auto'
           onClick={handlePrint}
+          minWidth='85px'
         >
           Print
         </Button>
