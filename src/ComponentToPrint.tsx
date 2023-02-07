@@ -1,13 +1,14 @@
 import { Heading, Stack } from '@chakra-ui/react';
 import { forwardRef, ComponentPropsWithoutRef } from 'react';
+import useStore from './store';
 import { Table } from './Table';
-import { useScheduleContext } from './useScheduleContext';
 
+interface ComponentToPrintProps {}
 export const ComponentToPrint = forwardRef<
-  any,
-  ComponentPropsWithoutRef<'div'>
+  HTMLDivElement,
+  ComponentToPrintProps
 >((props, ref) => {
-  const { employee } = useScheduleContext();
+  const { employee } = useStore();
 
   return (
     <Stack

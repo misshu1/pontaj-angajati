@@ -1,11 +1,18 @@
 import { Button, Input, Select, Stack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { AddSchedule } from './AddSchedule';
 import { monthsListNames, monthsListValue, yearsList } from './dateHelpers';
-import { useScheduleContext } from './useScheduleContext';
+import useStore from './store';
+import { useDebounce } from './useDebounce';
 
 export const HeaderDates = () => {
-  const { employee, updateEnployee, updateMonth, updateYear, month, year } =
-    useScheduleContext();
+  const { setEmployee, setMonth, setYear, month, year } = useStore();
+  const [name, setName] = useState('');
+  const debouncedName = useDebounce(name, 100);
+
+  useEffect(() => {
+    setEmployee(debouncedName);
+  }, [debouncedName]);
 
   return (
     <Stack
@@ -18,15 +25,15 @@ export const HeaderDates = () => {
       <Input
         placeholder='Nume Angajat'
         type='text'
-        value={employee}
-        onChange={(e) => updateEnployee(e.target.value)}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
         size='lg'
         marginTop='12px'
       />
       <Select
         size='lg'
         name='month'
-        onChange={(e) => updateMonth(+e.target.value)}
+        onChange={(e) => setMonth(+e.target.value)}
         value={month}
       >
         {monthsListValue.map((monthNumber, index) => (
@@ -38,7 +45,7 @@ export const HeaderDates = () => {
       <Select
         size='lg'
         name='year'
-        onChange={(e) => updateYear(+e.target.value)}
+        onChange={(e) => setYear(+e.target.value)}
         value={year}
       >
         {yearsList.map((year) => (

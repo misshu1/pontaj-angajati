@@ -21,15 +21,15 @@ import {
   getStartHour,
   getEndHour,
 } from './dateHelpers';
-import { useScheduleContext } from './useScheduleContext';
 import { DayScheduleConst } from './models';
 import { SCHEDULE_LEGEND } from './data';
+import useStore from './store';
 
 const MONTH_HOURS_LIMIT = 160;
 let totalHours: number = 0;
 
 export const Table = () => {
-  const { month, year, schedule } = useScheduleContext();
+  const { month, year, schedule } = useStore();
   const numberOfDaysInMonth = new Date(year, month, 0).getDate();
   const monthDays = Array.from(
     Array(numberOfDaysInMonth).keys(),
