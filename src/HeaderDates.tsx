@@ -2,7 +2,7 @@ import { Button, Input, Select, Stack } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { AddSchedule } from './AddSchedule';
 import { monthsListNames, monthsListValue, yearsList } from './dateHelpers';
-import useStore from './store';
+import { useStore } from './store';
 import { useDebounce } from './useDebounce';
 
 export const HeaderDates = () => {

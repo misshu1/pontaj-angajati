@@ -18,7 +18,7 @@ interface Store {
   setYear: (year: number) => void;
 }
 
-const useStore = create<Store>((set) => ({
+export const useStore = create<Store>((set) => ({
   employee: '',
   setEmployee: (employee) =>
     set((state) => ({
@@ -50,5 +50,3 @@ const useStore = create<Store>((set) => ({
       monthSchedule,
     })),
 }));
-
-export default useStore;

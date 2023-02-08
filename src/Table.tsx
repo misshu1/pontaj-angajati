@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-
+import { useEffect } from 'react';
 import {
   Table as ChackraTable,
   Thead,
@@ -22,9 +21,9 @@ import {
   getEndHour,
   isWeekend,
 } from './dateHelpers';
-import { DayScheduleConst, MonthSchedule } from './models';
+import { MonthSchedule } from './models';
 import { SCHEDULE_LEGEND } from './data';
-import useStore from './store';
+import { useStore } from './store';
 
 const MONTH_HOURS_LIMIT = 160;
 
@@ -49,32 +48,21 @@ export const Table = () => {
 
       const monthScheduleData = monthDays.reduce(
         (acc: MonthSchedule[], day: number, index) => {
+          const date = new Date(year, month - 1, day);
           totalHours +=
             (acc[index]?.duration ?? 0) +
-            getHours(new Date(year, month - 1, day), weekSchedule, holodays);
+            getHours(date, weekSchedule, holodays);
 
           return [
             ...acc,
             {
               day: day,
-              weekDayName: weekDay(new Date(year, month - 1, day)),
-              monthName: monthName(new Date(year, month - 1, day)),
-              duration: getHours(
-                new Date(year, month - 1, day),
-                weekSchedule,
-                holodays
-              ),
-              start: getStartHour(
-                new Date(year, month - 1, day),
-                weekSchedule,
-                holodays
-              ),
-              end: getEndHour(
-                new Date(year, month - 1, day),
-                weekSchedule,
-                holodays
-              ),
-              isWeekend: isWeekend(new Date(year, month - 1, day)),
+              weekDayName: weekDay(date),
+              monthName: monthName(date),
+              duration: getHours(date, weekSchedule, holodays),
+              start: getStartHour(date, weekSchedule, holodays),
+              end: getEndHour(date, weekSchedule, holodays),
+              isWeekend: isWeekend(date),
               totalHours: totalHours,
             },
           ];
