@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Table as ChackraTable,
@@ -20,74 +20,70 @@ import {
   weekDay,
   getStartHour,
   getEndHour,
+  isWeekend,
 } from './dateHelpers';
-import { DayScheduleConst } from './models';
+import { DayScheduleConst, MonthSchedule } from './models';
 import { SCHEDULE_LEGEND } from './data';
 import useStore from './store';
 
 const MONTH_HOURS_LIMIT = 160;
-let totalHours: number = 0;
 
 export const Table = () => {
-  const { month, year, schedule } = useStore();
+  const { month, year, weekSchedule, setMonthSchedule, monthSchedule } =
+    useStore();
   const numberOfDaysInMonth = new Date(year, month, 0).getDate();
   const monthDays = Array.from(
     Array(numberOfDaysInMonth).keys(),
     (_, i) => i + 1
   );
+
   const { data, status, error } = useQuery(['freeDays', year], () =>
     fetchFreeDays(year)
   );
 
+  const holodays = data?.map(({ date }) => formatDate(new Date(date)));
+
   useEffect(() => {
-    totalHours = 0;
-  }, [month]);
+    if (data) {
+      let totalHours = 0;
 
-  const handleRenderValue = (
-    day: number,
-    info: keyof typeof DayScheduleConst
-  ) => {
-    const holodays = data?.map(({ date }) => formatDate(new Date(date)));
+      const monthScheduleData = monthDays.reduce(
+        (acc: MonthSchedule[], day: number, index) => {
+          totalHours +=
+            (acc[index]?.duration ?? 0) +
+            getHours(new Date(year, month - 1, day), weekSchedule, holodays);
 
-    switch (info) {
-      case DayScheduleConst.duration: {
-        if (totalHours < MONTH_HOURS_LIMIT) {
-          const duration = (day: number) =>
-            +schedule[new Date(year, month - 1, day).getDay()]?.duration?.split(
-              'h'
-            )[0] || 0;
-
-          totalHours += duration(day);
-        }
-
-        return getHours(
-          new Date(year, month - 1, day),
-          schedule,
-          holodays,
-          totalHours < MONTH_HOURS_LIMIT
-        );
-      }
-      case DayScheduleConst.start: {
-        return getStartHour(
-          new Date(year, month - 1, day),
-          schedule,
-          holodays,
-          totalHours < MONTH_HOURS_LIMIT
-        );
-      }
-      case DayScheduleConst.end: {
-        return getEndHour(
-          new Date(year, month - 1, day),
-          schedule,
-          holodays,
-          totalHours < MONTH_HOURS_LIMIT
-        );
-      }
-
-      default:
-        return '';
+          return [
+            ...acc,
+            {
+              day: day,
+              weekDayName: weekDay(new Date(year, month - 1, day)),
+              monthName: monthName(new Date(year, month - 1, day)),
+              duration: getHours(
+                new Date(year, month - 1, day),
+                weekSchedule,
+                holodays
+              ),
+              start: getStartHour(
+                new Date(year, month - 1, day),
+                weekSchedule,
+                holodays
+              ),
+              end: getEndHour(
+                new Date(year, month - 1, day),
+                weekSchedule,
+                holodays
+              ),
+              isWeekend: isWeekend(new Date(year, month - 1, day)),
+              totalHours: totalHours,
+            },
+          ];
+        },
+        []
+      );
+      setMonthSchedule(monthScheduleData);
     }
-  };
+  }, [data, month, year]);
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'error') return <div>Error</div>;
@@ -135,15 +131,15 @@ export const Table = () => {
           <Th>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span>Total</span>
-              <span>{totalHours}h</span>
+              <span>{monthSchedule.at(-1)?.totalHours}h</span>
             </div>
           </Th>
-          {monthDays.map((day) => (
+          {monthSchedule.map(({ day, weekDayName, monthName }) => (
             <Th key={day}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span>{weekDay(new Date(year, month - 1, day))}</span>
+                <span>{weekDayName}</span>
                 <span>
-                  {day}/{monthName(new Date(year, month - 1, day))}
+                  {day}/{monthName}
                 </span>
               </div>
             </Th>
@@ -153,22 +149,20 @@ export const Table = () => {
       <Tbody>
         <Tr>
           <Td>Inceput</Td>
-          {monthDays.map((day) => (
-            <Td key={day}>{handleRenderValue(day, DayScheduleConst.start)}</Td>
+          {monthSchedule.map(({ day, start }) => (
+            <Td key={day}>{start}</Td>
           ))}
         </Tr>
         <Tr>
           <Td>Sfarsit</Td>
-          {monthDays.map((day) => (
-            <Td key={day}>{handleRenderValue(day, DayScheduleConst.end)}</Td>
+          {monthSchedule.map(({ day, end }) => (
+            <Td key={day}>{end}</Td>
           ))}
         </Tr>
         <Tr>
           <Td>Ore</Td>
-          {monthDays.map((day) => (
-            <Td key={day}>
-              {handleRenderValue(day, DayScheduleConst.duration)}
-            </Td>
+          {monthSchedule.map(({ day, duration }) => (
+            <Td key={day}>{duration === 0 ? '' : duration}</Td>
           ))}
         </Tr>
       </Tbody>

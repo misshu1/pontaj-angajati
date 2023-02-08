@@ -59,39 +59,39 @@ export const SCHEDULE_LEGEND = [
   },
 ];
 
-export const initialSchedule: WeekSchedule = {
+export const initialWeekSchedule: WeekSchedule = {
   0: {
-    duration: '12h',
+    duration: 12,
     start: '07:00',
     end: '19:00',
   },
   1: {
-    duration: '',
+    duration: 0,
     start: '',
     end: '',
   },
   2: {
-    duration: '',
+    duration: 0,
     start: '',
     end: '',
   },
   3: {
-    duration: '5h',
+    duration: 5,
     start: '17:00',
     end: '22:00',
   },
   4: {
-    duration: '5h',
+    duration: 5,
     start: '17:00',
     end: '22:00',
   },
   5: {
-    duration: '5h',
+    duration: 5,
     start: '17:00',
     end: '22:00',
   },
   6: {
-    duration: '13h',
+    duration: 13,
     start: '07:00',
     end: '19:00',
   },

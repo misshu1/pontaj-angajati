@@ -49,21 +49,19 @@ export const monthName = (date: Date): string => {
 export const getHours = (
   date: Date,
   schedule: WeekSchedule,
-  holodays: string[] | undefined,
-  isOverTime: boolean
-): string => {
-  if (isHoloday(date, holodays) || isOverTime) return '';
+  holodays: string[] | undefined
+): number => {
+  if (isHoloday(date, holodays)) return 0;
 
-  return schedule[date.getDay()]?.duration ?? '';
+  return schedule[date.getDay()]?.duration ?? 0;
 };
 
 export const getStartHour = (
   date: Date,
   schedule: WeekSchedule,
-  holodays: string[] | undefined,
-  isOverTime: boolean
+  holodays: string[] | undefined
 ) => {
-  if (isHoloday(date, holodays) || isOverTime) return '';
+  if (isHoloday(date, holodays)) return '';
 
   return schedule[date.getDay()]?.start ?? '';
 };
@@ -71,10 +69,9 @@ export const getStartHour = (
 export const getEndHour = (
   date: Date,
   schedule: WeekSchedule,
-  holodays: string[] | undefined,
-  isOverTime: boolean
+  holodays: string[] | undefined
 ) => {
-  if (isHoloday(date, holodays) || isOverTime) return '';
+  if (isHoloday(date, holodays)) return '';
 
   return schedule[date.getDay()]?.end ?? '';
 };

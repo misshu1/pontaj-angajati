@@ -1,10 +1,15 @@
 import { create } from 'zustand';
-import { initialSchedule } from './data';
-import { DaySchedule, WeekSchedule } from './models';
+import { initialWeekSchedule } from './data';
+import { DaySchedule, MonthSchedule, WeekSchedule } from './models';
 
 interface Store {
-  schedule: WeekSchedule;
-  setSchedule: (value: { daySchedule: DaySchedule; weekDay: number }) => void;
+  weekSchedule: WeekSchedule;
+  setWeekSchedule: (value: {
+    daySchedule: DaySchedule;
+    weekDay: number;
+  }) => void;
+  monthSchedule: MonthSchedule[];
+  setMonthSchedule: (schedule: MonthSchedule[]) => void;
   employee: string;
   setEmployee: (employee: string) => void;
   month: number;
@@ -32,10 +37,17 @@ const useStore = create<Store>((set) => ({
       ...state,
       year,
     })),
-  schedule: initialSchedule,
-  setSchedule: () =>
+  weekSchedule: initialWeekSchedule,
+  setWeekSchedule: (weekSchedule) =>
     set((state) => ({
       ...state,
+      weekSchedule,
+    })),
+  monthSchedule: [],
+  setMonthSchedule: (monthSchedule) =>
+    set((state) => ({
+      ...state,
+      monthSchedule,
     })),
 }));
 
