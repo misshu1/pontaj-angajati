@@ -14,6 +14,12 @@ th, td {
     text-align: center !important;
 }
 
+
+th:is(.empty), td:is(.empty) {
+    background-color: #d1d7de !important;
+    border-color: #dfe5ed !important;
+}
+ 
 @media print {
     html, body {
         font-size: 9px;
@@ -33,6 +39,12 @@ th, td {
 
     table, th, td {
         border: 1px solid #EDF2F7;
+    }
+
+    
+    th:is(.empty), td:is(.empty) {
+        background-color: #d1d7de !important;
+        border-color: #dfe5ed !important;
     }
 
     @page { 

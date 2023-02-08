@@ -122,8 +122,8 @@ export const Table = () => {
               <span>{monthSchedule.at(-1)?.totalHours}h</span>
             </div>
           </Th>
-          {monthSchedule.map(({ day, weekDayName, monthName }) => (
-            <Th key={day}>
+          {monthSchedule.map(({ day, weekDayName, monthName, duration }) => (
+            <Th key={day} className={!duration ? 'empty' : ''}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span>{weekDayName}</span>
                 <span>
@@ -138,19 +138,25 @@ export const Table = () => {
         <Tr>
           <Td>Inceput</Td>
           {monthSchedule.map(({ day, start }) => (
-            <Td key={day}>{start}</Td>
+            <Td key={day} className={!start ? 'empty' : ''}>
+              {start}
+            </Td>
           ))}
         </Tr>
         <Tr>
           <Td>Sfarsit</Td>
           {monthSchedule.map(({ day, end }) => (
-            <Td key={day}>{end}</Td>
+            <Td key={day} className={!end ? 'empty' : ''}>
+              {end}
+            </Td>
           ))}
         </Tr>
         <Tr>
           <Td>Ore</Td>
           {monthSchedule.map(({ day, duration }) => (
-            <Td key={day}>{duration === 0 ? '' : duration}</Td>
+            <Td key={day} className={!duration ? 'empty' : ''}>
+              {duration === 0 ? '' : duration}
+            </Td>
           ))}
         </Tr>
       </Tbody>

@@ -1,7 +1,7 @@
-import { Button, Input, Select, Stack } from '@chakra-ui/react';
+import { Button, Input, Select, Stack, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { AddSchedule } from './AddSchedule';
-import { monthsListNames, monthsListValue, yearsList } from './dateHelpers';
+import { monthsListValue, yearsList } from './dateHelpers';
 import { useStore } from './store';
 import { useDebounce } from './useDebounce';
 
@@ -38,10 +38,14 @@ export const HeaderDates = () => {
         onChange={(e) => setMonth(+e.target.value)}
         value={month}
         minWidth='200px'
+        textTransform='capitalize'
       >
         {monthsListValue.map((monthNumber, index) => (
           <option value={monthNumber} key={monthNumber}>
-            {monthsListNames[index]}
+            {new Date(new Date().getFullYear(), index, 1).toLocaleString(
+              'ro-RO',
+              { month: 'long' }
+            )}
           </option>
         ))}
       </Select>

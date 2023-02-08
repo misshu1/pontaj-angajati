@@ -76,23 +76,10 @@ export const getEndHour = (
   return schedule[date.getDay()]?.end ?? '';
 };
 
+// Returns an array containing the last 5 years from current year
 export const yearsList = Array.from(
   { length: 5 },
   (_, i) => new Date().getFullYear() - i
 );
 
 export const monthsListValue = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-export const monthsListNames = [
-  'Ianuarie',
-  'Februarie',
-  'Martie',
-  'Aprilie',
-  'Mai',
-  'Iunie',
-  'Iulie',
-  'August',
-  'Septembrie',
-  'Octombrie',
-  'Noiembrie',
-  'Decembrie',
-];
