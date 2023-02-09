@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { ComponentToPrint } from './ComponentToPrint';
 import { HeaderDates } from './HeaderDates';
 
 import './styles.css';
-import { Button } from '@chakra-ui/react';
 
 function App() {
   const componentRef = useRef(null);
@@ -31,16 +30,7 @@ function App() {
   return (
     <>
       <div style={{ display: 'flex', gap: '15px', overflow: 'auto' }}>
-        <HeaderDates />
-        <Button
-          colorScheme='yellow'
-          size='lg'
-          margin='27px 15px 0 auto'
-          onClick={handlePrint}
-          minWidth='85px'
-        >
-          Print
-        </Button>
+        <HeaderDates handlePrint={handlePrint} />
       </div>
       <ComponentToPrint ref={componentRef} />
     </>

@@ -1,11 +1,13 @@
 import { Button, Input, Select, Stack, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { AddSchedule } from './AddSchedule';
 import { monthsListValue, yearsList } from './dateHelpers';
 import { useStore } from './store';
 import { useDebounce } from './useDebounce';
-
-export const HeaderDates = () => {
+interface HeaderDatesProps {
+  handlePrint: () => void;
+}
+export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
   const { setEmployee, setMonth, setYear, month, year } = useStore();
   const [name, setName] = useState('');
   const debouncedName = useDebounce(name, 100);
@@ -73,6 +75,15 @@ export const HeaderDates = () => {
           Adauga Program
         </Button>
       </AddSchedule>
+      <Button
+        colorScheme='yellow'
+        size='lg'
+        margin='27px 15px 0 auto'
+        onClick={handlePrint}
+        minWidth='85px'
+      >
+        Print
+      </Button>
     </Stack>
   );
 };

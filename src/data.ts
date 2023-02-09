@@ -93,6 +93,6 @@ export const initialWeekSchedule: WeekSchedule = {
   6: {
     duration: 13,
     start: '07:00',
-    end: '19:00',
+    end: '20:00',
   },
 };

@@ -10,6 +10,8 @@ interface Store {
   }) => void;
   monthSchedule: MonthSchedule[];
   setMonthSchedule: (schedule: MonthSchedule[]) => void;
+  monthScheduleWithLimit: MonthSchedule[];
+  setMonthScheduleWithLimit: (schedule: MonthSchedule[]) => void;
   employee: string;
   setEmployee: (employee: string) => void;
   month: number;
@@ -48,5 +50,11 @@ export const useStore = create<Store>((set) => ({
     set((state) => ({
       ...state,
       monthSchedule,
+    })),
+  monthScheduleWithLimit: [],
+  setMonthScheduleWithLimit: (monthScheduleWithLimit) =>
+    set((state) => ({
+      ...state,
+      monthScheduleWithLimit,
     })),
 }));

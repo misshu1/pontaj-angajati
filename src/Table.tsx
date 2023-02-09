@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useMemo } from 'react';
 import {
   Table as ChackraTable,
   Thead,
@@ -28,8 +28,7 @@ import { useStore } from './store';
 const MONTH_HOURS_LIMIT = 160;
 
 export const Table = () => {
-  const { month, year, weekSchedule, setMonthSchedule, monthSchedule } =
-    useStore();
+  const { month, year, weekSchedule } = useStore();
   const numberOfDaysInMonth = new Date(year, month, 0).getDate();
   const monthDays = Array.from(
     Array(numberOfDaysInMonth).keys(),
@@ -42,36 +41,64 @@ export const Table = () => {
 
   const holodays = data?.map(({ date }) => formatDate(new Date(date)));
 
-  useEffect(() => {
+  const monthSchedule = useMemo(() => {
     if (data) {
       let totalHours = 0;
 
-      const monthScheduleData = monthDays.reduce(
-        (acc: MonthSchedule[], day: number, index) => {
-          const date = new Date(year, month - 1, day);
-          totalHours +=
-            (acc[index]?.duration ?? 0) +
-            getHours(date, weekSchedule, holodays);
+      return monthDays.reduce((acc: MonthSchedule[], day: number, index) => {
+        const date = new Date(year, month - 1, day);
 
-          return [
-            ...acc,
-            {
-              day: day,
-              weekDayName: weekDay(date),
-              monthName: monthName(date),
-              duration: getHours(date, weekSchedule, holodays),
-              start: getStartHour(date, weekSchedule, holodays),
-              end: getEndHour(date, weekSchedule, holodays),
-              isWeekend: isWeekend(date),
-              totalHours: totalHours,
-            },
-          ];
-        },
-        []
-      );
-      setMonthSchedule(monthScheduleData);
+        totalHours +=
+          (acc[index]?.duration ?? 0) + getHours(date, weekSchedule, holodays);
+
+        return [
+          ...acc,
+          {
+            day: day,
+            weekDayName: weekDay(date),
+            monthName: monthName(date),
+            duration: getHours(date, weekSchedule, holodays),
+            start: getStartHour(date, weekSchedule, holodays),
+            end: getEndHour(date, weekSchedule, holodays),
+            isWeekend: isWeekend(date),
+            totalHours: totalHours,
+          },
+        ];
+      }, []);
     }
-  }, [data, month, year]);
+
+    return [];
+  }, [data, monthDays, year, month]);
+
+  const monthScheduleWithLimit = useMemo(() => {
+    return monthSchedule.map((item) => {
+      if (
+        item.totalHours < MONTH_HOURS_LIMIT &&
+        item.duration + item.totalHours > MONTH_HOURS_LIMIT
+      ) {
+        const duration = MONTH_HOURS_LIMIT - item.totalHours;
+
+        return {
+          ...item,
+          totalHours: item.totalHours + duration,
+          end: `${+item.start.split(':')[0] + duration}:00`,
+          duration,
+        };
+      }
+
+      if (item.totalHours <= MONTH_HOURS_LIMIT) {
+        return item;
+      }
+
+      return {
+        ...item,
+        totalHours: MONTH_HOURS_LIMIT,
+        start: '',
+        end: '',
+        duration: 0,
+      };
+    });
+  }, [monthSchedule]);
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'error') return <div>Error</div>;
@@ -119,25 +146,27 @@ export const Table = () => {
           <Th>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span>Total</span>
-              <span>{monthSchedule.at(-1)?.totalHours}h</span>
+              <span>{monthScheduleWithLimit.at(-1)?.totalHours}h</span>
             </div>
           </Th>
-          {monthSchedule.map(({ day, weekDayName, monthName, duration }) => (
-            <Th key={day} className={!duration ? 'empty' : ''}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span>{weekDayName}</span>
-                <span>
-                  {day}/{monthName}
-                </span>
-              </div>
-            </Th>
-          ))}
+          {monthScheduleWithLimit.map(
+            ({ day, weekDayName, monthName, duration }) => (
+              <Th key={day} className={!duration ? 'empty' : ''}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span>{weekDayName}</span>
+                  <span>
+                    {day}/{monthName}
+                  </span>
+                </div>
+              </Th>
+            )
+          )}
         </Tr>
       </Thead>
       <Tbody>
         <Tr>
           <Td>Inceput</Td>
-          {monthSchedule.map(({ day, start }) => (
+          {monthScheduleWithLimit.map(({ day, start }) => (
             <Td key={day} className={!start ? 'empty' : ''}>
               {start}
             </Td>
@@ -145,7 +174,7 @@ export const Table = () => {
         </Tr>
         <Tr>
           <Td>Sfarsit</Td>
-          {monthSchedule.map(({ day, end }) => (
+          {monthScheduleWithLimit.map(({ day, end }) => (
             <Td key={day} className={!end ? 'empty' : ''}>
               {end}
             </Td>
@@ -153,7 +182,7 @@ export const Table = () => {
         </Tr>
         <Tr>
           <Td>Ore</Td>
-          {monthSchedule.map(({ day, duration }) => (
+          {monthScheduleWithLimit.map(({ day, duration }) => (
             <Td key={day} className={!duration ? 'empty' : ''}>
               {duration === 0 ? '' : duration}
             </Td>
