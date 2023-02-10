@@ -1,6 +1,6 @@
-import { WeekSchedule } from './models';
+import { ScheduleEventType, ScheduleLegendType, WeekSchedule } from './models';
 
-export const SCHEDULE_LEGEND = [
+export const SCHEDULE_LEGEND: ScheduleLegendType[] = [
   {
     id: 'A',
     name: 'Accident De Munca',
@@ -59,11 +59,56 @@ export const SCHEDULE_LEGEND = [
   },
 ];
 
+export const scheduledEvents: ScheduleEventType[] = [
+  {
+    day: 3,
+    month: 2,
+    year: 2023,
+    eventType: 'B',
+  },
+  {
+    day: 4,
+    month: 2,
+    year: 2023,
+    eventType: 'B',
+  },
+  {
+    day: 5,
+    month: 2,
+    year: 2023,
+    eventType: 'B',
+  },
+  {
+    day: 19,
+    month: 2,
+    year: 2023,
+    eventType: 'L',
+  },
+  {
+    day: 20,
+    month: 2,
+    year: 2023,
+    eventType: 'L',
+  },
+  {
+    day: 21,
+    month: 2,
+    year: 2023,
+    eventType: 'L',
+  },
+  {
+    day: 22,
+    month: 2,
+    year: 2023,
+    eventType: 'L',
+  },
+];
+
 export const initialWeekSchedule: WeekSchedule = {
   0: {
-    duration: 12,
+    duration: 14,
     start: '07:00',
-    end: '19:00',
+    end: '21:00',
   },
   1: {
     duration: 0,
@@ -76,23 +121,23 @@ export const initialWeekSchedule: WeekSchedule = {
     end: '',
   },
   3: {
-    duration: 5,
-    start: '17:00',
+    duration: 4,
+    start: '18:00',
     end: '22:00',
   },
   4: {
-    duration: 5,
-    start: '17:00',
+    duration: 4,
+    start: '18:00',
     end: '22:00',
   },
   5: {
-    duration: 5,
-    start: '17:00',
+    duration: 4,
+    start: '18:00',
     end: '22:00',
   },
   6: {
-    duration: 13,
+    duration: 14,
     start: '07:00',
-    end: '20:00',
+    end: '21:00',
   },
 };

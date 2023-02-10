@@ -3,6 +3,7 @@ html, body {
     box-sizing: border-box;
     table-layout: fixed;
     padding: 0;
+    margin: 0 16px;
 }
 
 table, th, td {
@@ -47,9 +48,13 @@ th:is(.empty), td:is(.empty) {
         border-color: #dfe5ed !important;
     }
 
+    .legend-items {
+        grid-template-rows: repeat(5, 10pt) !important;
+    }
+
     @page { 
         /* size: 11.69in 8.27in; */
         size: A4 landscape;
         margin: 5mm;
-    }
+    }   
 }

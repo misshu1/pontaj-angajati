@@ -4,9 +4,11 @@ import { AddSchedule } from './AddSchedule';
 import { monthsListValue, yearsList } from './dateHelpers';
 import { useStore } from './store';
 import { useDebounce } from './useDebounce';
+
 interface HeaderDatesProps {
   handlePrint: () => void;
 }
+
 export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
   const { setEmployee, setMonth, setYear, month, year } = useStore();
   const [name, setName] = useState('');
@@ -16,6 +18,14 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
     setEmployee(debouncedName);
   }, [debouncedName]);
 
+  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setMonth(+e.target.value);
+  };
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setYear(+e.target.value);
+  };
+
   return (
     <Stack
       spacing={3}
@@ -24,6 +34,8 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
       gap='15px'
       flex='1'
       padding='15px'
+      width='100%'
+      maxWidth='80rem'
     >
       <Input
         placeholder='Nume Angajat'
@@ -37,7 +49,7 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
       <Select
         size='lg'
         name='month'
-        onChange={(e) => setMonth(+e.target.value)}
+        onChange={handleMonthChange}
         value={month}
         minWidth='200px'
         textTransform='capitalize'
@@ -54,7 +66,7 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
       <Select
         size='lg'
         name='year'
-        onChange={(e) => setYear(+e.target.value)}
+        onChange={handleYearChange}
         value={year}
         minWidth='200px'
       >
@@ -64,17 +76,7 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
           </option>
         ))}
       </Select>
-      <AddSchedule>
-        <Button
-          colorScheme='green'
-          size='lg'
-          margin='27px 15px 0 0'
-          width='100%'
-          minWidth='200px'
-        >
-          Adauga Program
-        </Button>
-      </AddSchedule>
+      <AddSchedule />
       <Button
         colorScheme='yellow'
         size='lg'

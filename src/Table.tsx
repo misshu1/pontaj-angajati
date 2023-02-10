@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import {
   Table as ChackraTable,
   Thead,
@@ -21,25 +21,44 @@ import {
   getEndHour,
   isWeekend,
 } from './dateHelpers';
-import { MonthSchedule } from './models';
-import { SCHEDULE_LEGEND } from './data';
+import { MonthSchedule, ScheduleLegendId } from './models';
+import { SCHEDULE_LEGEND, scheduledEvents } from './data';
 import { useStore } from './store';
 
 const MONTH_HOURS_LIMIT = 160;
 
 export const Table = () => {
-  const { month, year, weekSchedule } = useStore();
+  const { month, year, weekSchedule, setHolidays, holidays } = useStore();
   const numberOfDaysInMonth = new Date(year, month, 0).getDate();
   const monthDays = Array.from(
     Array(numberOfDaysInMonth).keys(),
     (_, i) => i + 1
   );
 
-  const { data, status, error } = useQuery(['freeDays', year], () =>
-    fetchFreeDays(year)
+  const { data, status, error } = useQuery(
+    ['freeDays', year],
+    () => fetchFreeDays(year),
+    {
+      onSuccess: (data) => {
+        setHolidays(data.map(({ date }) => formatDate(new Date(date))));
+      },
+    }
   );
 
-  const holodays = data?.map(({ date }) => formatDate(new Date(date)));
+  const renderValue = useCallback(
+    (eventType: ScheduleLegendId | null, value: number | string) => {
+      if (eventType !== null) {
+        return eventType;
+      }
+
+      if (typeof value === 'number' && value === 0) {
+        return '';
+      }
+
+      return value;
+    },
+    []
+  );
 
   const monthSchedule = useMemo(() => {
     if (data) {
@@ -49,19 +68,30 @@ export const Table = () => {
       return monthDays.reduce((acc: MonthSchedule[], day: number) => {
         const date = new Date(year, month - 1, day);
 
+        const isEvent = scheduledEvents.some(
+          (scheduledEvent) =>
+            year === scheduledEvent.year &&
+            month === scheduledEvent.month &&
+            day === scheduledEvent.day
+        );
+
+        const eventType = scheduledEvents.find(
+          (scheduledEvent) =>
+            year === scheduledEvent.year &&
+            month === scheduledEvent.month &&
+            day === scheduledEvent.day
+        )?.eventType;
+
+        const duration = isEvent ? 0 : getHours(date, weekSchedule, holidays);
+
         const previousTotalHours = totalHours;
-        totalHours += getHours(date, weekSchedule, holodays);
+        totalHours += duration;
 
         const overlimitDuration = MONTH_HOURS_LIMIT - totalHours;
         const durationRemaining =
-          getHours(date, weekSchedule, holodays) + overlimitDuration > 0
-            ? getHours(date, weekSchedule, holodays) + overlimitDuration
-            : 0;
+          duration + overlimitDuration > 0 ? duration + overlimitDuration : 0;
 
-        if (
-          MONTH_HOURS_LIMIT - previousTotalHours <
-          getHours(date, weekSchedule, holodays)
-        ) {
+        if (MONTH_HOURS_LIMIT - previousTotalHours < duration) {
           firstDayOerLimit = true;
         }
 
@@ -71,21 +101,20 @@ export const Table = () => {
             day: day,
             weekDayName: weekDay(date),
             monthName: monthName(date),
-            duration: firstDayOerLimit
-              ? durationRemaining
-              : getHours(date, weekSchedule, holodays),
+            duration: firstDayOerLimit ? durationRemaining : duration,
             start:
               durationRemaining === 0
                 ? ''
-                : getStartHour(date, weekSchedule, holodays),
+                : getStartHour(date, weekSchedule, holidays),
             end:
               durationRemaining === 0
                 ? ''
-                : getEndHour(date, weekSchedule, holodays),
+                : getEndHour(date, weekSchedule, holidays),
             isWeekend: isWeekend(date),
             totalHours: firstDayOerLimit
               ? totalHours - totalHours + MONTH_HOURS_LIMIT
               : totalHours,
+            eventType: isEvent && eventType ? eventType : null,
           },
         ];
       }, []);
@@ -112,7 +141,9 @@ export const Table = () => {
         <Stack
           display='grid'
           gridTemplateColumns='repeat(3, 200px)'
-          gridTemplateRows='repeat(4, 20px)'
+          gridAutoFlow='column'
+          gridTemplateRows='repeat(5, 20px)'
+          className='legend-items'
         >
           {SCHEDULE_LEGEND.map((item) => (
             <Text
@@ -158,25 +189,37 @@ export const Table = () => {
       <Tbody>
         <Tr>
           <Td>Inceput</Td>
-          {monthSchedule.map(({ day, start }) => (
-            <Td key={day} className={!start ? 'empty' : ''}>
-              {start}
+          {monthSchedule.map(({ day, start, duration, eventType }) => (
+            <Td
+              key={day}
+              className={!duration ? 'empty' : ''}
+              fontWeight={eventType ? 900 : 400}
+            >
+              {renderValue(eventType, start)}
             </Td>
           ))}
         </Tr>
         <Tr>
           <Td>Sfarsit</Td>
-          {monthSchedule.map(({ day, end }) => (
-            <Td key={day} className={!end ? 'empty' : ''}>
-              {end}
+          {monthSchedule.map(({ day, end, duration, eventType }) => (
+            <Td
+              key={day}
+              className={!duration ? 'empty' : ''}
+              fontWeight={eventType ? 900 : 400}
+            >
+              {renderValue(eventType, end)}
             </Td>
           ))}
         </Tr>
         <Tr>
           <Td>Ore</Td>
-          {monthSchedule.map(({ day, duration }) => (
-            <Td key={day} className={!duration ? 'empty' : ''}>
-              {duration === 0 ? '' : duration}
+          {monthSchedule.map(({ day, duration, eventType }) => (
+            <Td
+              key={day}
+              className={!duration ? 'empty' : ''}
+              fontWeight={eventType ? 900 : 400}
+            >
+              {renderValue(eventType, duration)}
             </Td>
           ))}
         </Tr>
