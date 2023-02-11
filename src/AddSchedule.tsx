@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import {
   Button,
   Modal,
@@ -10,8 +10,21 @@ import {
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider, MobileTimePicker } from '@mui/x-date-pickers';
+import { createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/system';
 
 interface AddScheduleProps {}
+
+const customTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#3182ce',
+      contrastText: 'white',
+    },
+  },
+});
 
 export const AddSchedule: FC<AddScheduleProps> = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -43,7 +56,40 @@ export const AddSchedule: FC<AddScheduleProps> = () => {
             Adauga Program Saptamanal
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>coming soon</ModalBody>
+          <ModalBody>
+            <ThemeProvider theme={customTheme}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <MobileTimePicker
+                  views={['hours', 'minutes']}
+                  format='HH:mm'
+                  localeText={{
+                    toolbarTitle: 'Alege ora',
+                    cancelButtonLabel: 'Anulare',
+                  }}
+                  minutesStep={5}
+                  ampm={false}
+                  onAccept={(accept) => console.log(accept)}
+                  sx={{
+                    '& .MuiInputBase-root .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'inherit',
+                    },
+                    '& .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline':
+                      {
+                        borderColor: 'var(--chakra-colors-gray-300)',
+                      },
+                    '& .MuiInputBase-root:focus-visible .MuiOutlinedInput-notchedOutline':
+                      {
+                        borderColor: '#3182ce',
+                      },
+                    '& .MuiInputBase-root': {
+                      height: 'var(--chakra-sizes-12)',
+                      borderRadius: 'var(--chakra-radii-md)',
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            </ThemeProvider>
+          </ModalBody>
           <ModalFooter display='flex' justifyContent='flex-end' gap='16px'>
             <Button colorScheme='red' size='sm' onClick={onClose}>
               Inchide
@@ -57,3 +103,14 @@ export const AddSchedule: FC<AddScheduleProps> = () => {
     </>
   );
 };
+// import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
+
+// <MobileTimePicker
+// label={'"minutes" and "seconds"'}
+// views={["hours", "minutes"]}
+// format="hh:mm"
+// ampm={false}
+// onChange={(newValue: any) => {
+//   console.log(newValue);
+// }}
+// />
