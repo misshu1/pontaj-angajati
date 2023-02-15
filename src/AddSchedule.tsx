@@ -41,7 +41,7 @@ export const AddSchedule: FC<AddScheduleProps> = () => {
         margin='27px 15px 0 0'
         width='100%'
         minWidth='200px'
-        onClick={onOpen}
+        // onClick={onOpen}
       >
         Adauga Program
       </Button>
@@ -63,8 +63,10 @@ export const AddSchedule: FC<AddScheduleProps> = () => {
                   views={['hours', 'minutes']}
                   format='HH:mm'
                   localeText={{
-                    toolbarTitle: 'Alege ora',
+                    toolbarTitle: 'Ora de începere',
                     cancelButtonLabel: 'Anulare',
+                    fieldHoursPlaceholder: () => '- - ',
+                    fieldMinutesPlaceholder: () => ' - -',
                   }}
                   minutesStep={5}
                   ampm={false}
