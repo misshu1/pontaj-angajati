@@ -1,19 +1,19 @@
 import { forwardRef } from 'react';
 import { Heading, Stack } from '@chakra-ui/react';
-// import { useStore } from './store';
 import { Table } from './Table';
+import { useRootData } from '~/hooks';
 
 interface ComponentToPrintProps {}
 export const ComponentToPrint = forwardRef<
   HTMLDivElement,
   ComponentToPrintProps
 >((props, ref) => {
-  //   const { employee } = useStore();
+  const data = useRootData();
 
   return (
     <Stack ref={ref} overflow='auto'>
       <Heading as='h3' size='lg' textTransform='capitalize'>
-        {/* {employee} */}
+        {data?.employee}
       </Heading>
       <Table />
     </Stack>

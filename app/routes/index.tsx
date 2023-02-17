@@ -1,7 +1,5 @@
-import { Button } from '@chakra-ui/react';
-import type { LoaderArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { json, redirect } from '@remix-run/node';
+import type { LoaderArgs, ActionArgs } from '@remix-run/node';
 import { useEffect, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { ComponentToPrint, HeaderDates } from '~/components';
@@ -9,10 +7,26 @@ import { scheduleLegend, initialWeekSchedule, scheduledEvents } from '~/data';
 import type { RootData } from '~/models';
 import { fetchFreeDays } from '~/requests';
 import { formatDate, generateSchedule } from '~/utils';
+import { commitSession, getSession } from '~/session';
 
-export async function loader({ params, context, request }: LoaderArgs) {
-  const year = new Date().getFullYear();
-  const month = new Date().getMonth() + 1;
+export async function loader({ request }: LoaderArgs) {
+  let year = new Date().getFullYear();
+  let month = new Date().getMonth() + 1;
+  let employee = '';
+  const session = await getSession(request.headers.get('Cookie'));
+
+  if (session.has('year')) {
+    year = await session.get('year');
+  }
+
+  if (session.has('month')) {
+    month = await session.get('month');
+  }
+
+  if (session.has('employee')) {
+    employee = await session.get('employee');
+  }
+
   const freeDaysData = await fetchFreeDays(year);
   const legalFreeDays = freeDaysData.map(({ date }) =>
     formatDate(new Date(date))
@@ -20,31 +34,57 @@ export async function loader({ params, context, request }: LoaderArgs) {
 
   const monthSchedule = generateSchedule({
     legalFreeDays,
-    month,
-    monthHoursLimit: 160,
-    scheduledEvents,
     weekSchedule: initialWeekSchedule,
+    scheduledEvents,
+    monthHoursLimit: 160,
+    month,
     year,
   });
 
   const data: RootData = {
-    scheduleLegend,
-    scheduledEvents,
     legalFreeDays,
-    employee: '',
-    month: new Date().getMonth() + 1,
-    year,
     weekSchedule: initialWeekSchedule,
     monthSchedule,
+    scheduledEvents,
+    scheduleLegend,
+    employee,
+    month,
+    year,
   };
 
-  return json(data);
+  return json(data, {
+    headers: {
+      'Set-Cookie': await commitSession(session),
+    },
+  });
+}
+
+export async function action({ request }: ActionArgs) {
+  const formData = await request.formData();
+  const { name, value } = Object.fromEntries(formData);
+  const session = await getSession(request.headers.get('Cookie'));
+
+  if (name === 'month' && typeof value === 'string') {
+    session.set('month', +value);
+  }
+
+  if (name === 'year' && typeof value === 'string') {
+    session.set('year', +value);
+  }
+
+  if (name === 'employee' && typeof value === 'string') {
+    session.set('employee', value);
+  }
+
+  return redirect('/', {
+    headers: {
+      'Set-Cookie': await commitSession(session),
+    },
+  });
 }
 
 export default function Index() {
-  //   const data = useLoaderData<typeof loader>();
   const componentRef = useRef(null);
-
   const handlePrint = useReactToPrint({
     content: () => componentRef.current || null,
   });
@@ -62,15 +102,12 @@ export default function Index() {
     return () => {
       window.removeEventListener('keydown', printEvent);
     };
-  }, []);
+  }, [handlePrint]);
 
   return (
     <>
       <div style={{ display: 'flex', gap: '15px', overflow: 'auto' }}>
         <HeaderDates handlePrint={handlePrint} />
-        <Button onClick={handlePrint} colorScheme='yellow'>
-          print
-        </Button>
       </div>
       <ComponentToPrint ref={componentRef} />
     </>
