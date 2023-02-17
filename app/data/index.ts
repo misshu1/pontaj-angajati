@@ -1,6 +1,10 @@
-import { ScheduleEventType, ScheduleLegendType, WeekSchedule } from './models';
+import type {
+  ScheduleEventType,
+  ScheduleLegendType,
+  WeekSchedule,
+} from '~/models';
 
-export const SCHEDULE_LEGEND: ScheduleLegendType[] = [
+export const scheduleLegend: ScheduleLegendType[] = [
   {
     id: 'A',
     name: 'Accident De Munca',

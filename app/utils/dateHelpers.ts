@@ -1,4 +1,4 @@
-import { WeekSchedule } from './models';
+import type { WeekSchedule } from '~/models';
 
 export const formatDate = (date: Date): string => {
   const options = {

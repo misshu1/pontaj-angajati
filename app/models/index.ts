@@ -47,3 +47,14 @@ export interface ScheduleEventType {
   year: number;
   eventType: ScheduleLegendId;
 }
+
+export interface RootData {
+  scheduleLegend: ScheduleLegendType[];
+  scheduledEvents: ScheduleEventType[];
+  legalFreeDays: string[];
+  employee: string;
+  month: number;
+  year: number;
+  weekSchedule: WeekSchedule;
+  monthSchedule: MonthSchedule[];
+}
