@@ -10,9 +10,13 @@ interface HeaderDatesProps {
 }
 export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
   const data = useRootData();
-  const [name, setName] = useState('');
-  const debouncedName = useDebounce(name, 100);
+  const [name, setName] = useState(data?.employee ?? '');
   const fetcher = useFetcher();
+  const debouncedName = useDebounce(name, 300);
+
+  const handleEmployeeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
 
   useEffect(() => {
     fetcher.submit(
@@ -51,7 +55,7 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
         placeholder='Nume Angajat'
         type='text'
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={handleEmployeeChange}
         size='lg'
         marginTop='12px'
         minWidth='200px'

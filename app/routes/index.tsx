@@ -13,6 +13,7 @@ export async function loader({ request }: LoaderArgs) {
   let year = new Date().getFullYear();
   let month = new Date().getMonth() + 1;
   let employee = '';
+  let legalFreeDays: string[] = [];
   const session = await getSession(request.headers.get('Cookie'));
 
   if (session.has('year')) {
@@ -27,10 +28,20 @@ export async function loader({ request }: LoaderArgs) {
     employee = await session.get('employee');
   }
 
-  const freeDaysData = await fetchFreeDays(year);
-  const legalFreeDays = freeDaysData.map(({ date }) =>
-    formatDate(new Date(date))
-  );
+  if (
+    !session.has('legalFreeDays') ||
+    (session.has('year') &&
+      session.has('previousYear') &&
+      session.get('year') !== session.get('previousYear'))
+  ) {
+    // Only fetch 'freeDays' when year changed
+    // Else use the saved data from cookie
+    const freeDaysData = await fetchFreeDays(year);
+    legalFreeDays = freeDaysData.map(({ date }) => formatDate(new Date(date)));
+    session.set('legalFreeDays', legalFreeDays);
+  } else {
+    legalFreeDays = session.get('legalFreeDays');
+  }
 
   const monthSchedule = generateSchedule({
     legalFreeDays,
@@ -68,6 +79,7 @@ export async function action({ request }: ActionArgs) {
     session.set('month', +value);
   }
 
+  session.set('previousYear', session.get('year') ?? null);
   if (name === 'year' && typeof value === 'string') {
     session.set('year', +value);
   }
