@@ -11,6 +11,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import type { ScheduleLegendId } from '~/models';
+import { EmptyTable } from '~/components';
 import { useRootData } from '~/hooks';
 
 export const Table = () => {
@@ -31,10 +32,10 @@ export const Table = () => {
     []
   );
 
-  if (!data) return <span>No Data</span>;
+  if (!data) return <EmptyTable />;
 
   return (
-    <ChackraTable variant='striped'>
+    <ChackraTable variant='striped' size='md'>
       <TableCaption textAlign='left'>
         <Text
           fontSize='sm'
@@ -52,7 +53,7 @@ export const Table = () => {
           gridTemplateRows='repeat(5, 20px)'
           className='legend-items'
         >
-          {data.scheduleLegend.map((item) => (
+          {data?.scheduleLegend.map((item) => (
             <Text
               key={item.id}
               fontSize='sm'

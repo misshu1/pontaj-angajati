@@ -1,4 +1,4 @@
-import { useFetcher } from '@remix-run/react';
+import { Link, useFetcher } from '@remix-run/react';
 import { Button, Input, Select, Stack } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import type { FC } from 'react';
@@ -67,6 +67,9 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
         value={data?.month}
         minWidth='200px'
         textTransform='capitalize'
+        isDisabled={
+          fetcher.state === 'submitting' || fetcher.state === 'loading'
+        }
       >
         {monthsListValue.map((monthNumber, index) => (
           <option value={monthNumber} key={monthNumber}>
@@ -83,6 +86,9 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
         onChange={handleYearChange}
         value={data?.year}
         minWidth='200px'
+        isDisabled={
+          fetcher.state === 'submitting' || fetcher.state === 'loading'
+        }
       >
         {yearsList.map((year) => (
           <option value={year} key={year}>
@@ -90,16 +96,18 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
           </option>
         ))}
       </Select>
-      <Button
-        colorScheme='green'
-        size='lg'
-        margin='27px 15px 0 0'
-        width='100%'
-        minWidth='200px'
-        type='button'
-      >
-        Adauga Program
-      </Button>
+      <Link to='/add-schedule'>
+        <Button
+          colorScheme='green'
+          size='lg'
+          width='100%'
+          minWidth='200px'
+          type='button'
+        >
+          Adauga Program
+        </Button>
+      </Link>
+
       <Button
         colorScheme='yellow'
         size='lg'

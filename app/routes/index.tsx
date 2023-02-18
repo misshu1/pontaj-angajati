@@ -5,43 +5,19 @@ import { useReactToPrint } from 'react-to-print';
 import { ComponentToPrint, HeaderDates } from '~/components';
 import { scheduleLegend, initialWeekSchedule, scheduledEvents } from '~/data';
 import type { RootData } from '~/models';
-import { fetchFreeDays } from '~/requests';
-import { formatDate, generateSchedule } from '~/utils';
-import { commitSession, getSession } from '~/session';
+import { generateSchedule } from '~/utils';
+import { commitSession, getLegalFreeDays, getSession } from '~/session';
 
 export async function loader({ request }: LoaderArgs) {
-  let year = new Date().getFullYear();
-  let month = new Date().getMonth() + 1;
-  let employee = '';
-  let legalFreeDays: string[] = [];
   const session = await getSession(request.headers.get('Cookie'));
-
-  if (session.has('year')) {
-    year = await session.get('year');
-  }
-
-  if (session.has('month')) {
-    month = await session.get('month');
-  }
-
-  if (session.has('employee')) {
-    employee = await session.get('employee');
-  }
-
-  if (
-    !session.has('legalFreeDays') ||
-    (session.has('year') &&
-      session.has('previousYear') &&
-      session.get('year') !== session.get('previousYear'))
-  ) {
-    // Only fetch 'freeDays' when year changed
-    // Else use the saved data from cookie
-    const freeDaysData = await fetchFreeDays(year);
-    legalFreeDays = freeDaysData.map(({ date }) => formatDate(new Date(date)));
-    session.set('legalFreeDays', legalFreeDays);
-  } else {
-    legalFreeDays = session.get('legalFreeDays');
-  }
+  const year = session.has('year')
+    ? session.get('year')
+    : new Date().getFullYear();
+  const month = session.has('month')
+    ? session.get('month')
+    : new Date().getMonth() + 1;
+  const employee = session.has('employee') ? session.get('employee') : '';
+  const legalFreeDays = await getLegalFreeDays(request);
 
   const monthSchedule = generateSchedule({
     legalFreeDays,
