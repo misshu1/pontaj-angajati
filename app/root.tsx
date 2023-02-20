@@ -9,11 +9,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react';
-import type { MetaFunction, LinksFunction } from '@remix-run/node'; // Depends on the runtime you choose
+import type { MetaFunction, LinksFunction } from '@remix-run/node';
+import { json } from '@remix-run/node'; // Depends on the runtime you choose
 
 import { ServerStyleContext, ClientStyleContext } from './context';
 import GlobalStyles from '~/styles/global.styles.css';
+import { getPublicKeys } from './environment.server';
+import { PublicEnv } from '~/ui';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -36,6 +40,12 @@ export let links: LinksFunction = () => {
   ];
 };
 
+export function loader() {
+  return json({
+    publicKeys: getPublicKeys(),
+  });
+}
+
 interface DocumentProps {
   children: React.ReactNode;
 }
@@ -44,6 +54,7 @@ const Document = withEmotionCache(
   ({ children }: DocumentProps, emotionCache) => {
     const serverStyleData = useContext(ServerStyleContext);
     const clientStyleData = useContext(ClientStyleContext);
+    const { publicKeys } = useLoaderData<typeof loader>();
 
     // Only executed on client
     useEffect(() => {
@@ -77,6 +88,7 @@ const Document = withEmotionCache(
           {children}
           <ScrollRestoration />
           <Scripts />
+          <PublicEnv {...publicKeys} />
           <LiveReload />
         </body>
       </html>

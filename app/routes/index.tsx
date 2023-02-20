@@ -6,7 +6,7 @@ import { ComponentToPrint, HeaderDates } from '~/components';
 import { scheduleLegend, initialWeekSchedule, scheduledEvents } from '~/data';
 import type { RootData } from '~/models';
 import { generateSchedule } from '~/utils';
-import { commitSession, getLegalFreeDays, getSession } from '~/session';
+import { commitSession, getLegalFreeDays, getSession } from '~/cookies';
 
 export async function loader({ request }: LoaderArgs) {
   const session = await getSession(request.headers.get('Cookie'));

@@ -2,12 +2,15 @@ html, body {
     font-family: 'Roboto', sans-serif;
     box-sizing: border-box;
     table-layout: fixed;
-    padding: 0;
-    margin: 0 16px;
+    margin: 0;
+    padding: 0 4px;
+    width: 100%;
+    height: 100%;
 }
 
 table, th, td {
     border: 1px solid #EDF2F7;
+    background:#fff;
 }
 
 th, td {
@@ -40,6 +43,7 @@ th:is(.empty), td:is(.empty) {
 
     table, th, td {
         border: 1px solid #EDF2F7;
+        background:#fff;
     }
 
     

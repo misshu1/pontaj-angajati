@@ -2,16 +2,21 @@ import { createCookieSessionStorage } from '@remix-run/node';
 import { fetchFreeDays } from '~/requests';
 import { formatDate } from '~/utils';
 
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
+  throw new Error('SESSION_SECRET must be set!');
+}
+
 const { getSession, commitSession, destroySession } =
   createCookieSessionStorage({
     cookie: {
       name: '__session',
       httpOnly: true,
-      maxAge: 34560000, // 400 days
+      maxAge: 60 * 60 * 24 * 30, // 30 days
       path: '/',
       sameSite: 'lax',
-      secrets: ['s3cret1 stuffing'],
-      secure: true,
+      secrets: [sessionSecret],
+      secure: process.env.NODE_ENV === 'production',
     },
   });
 
