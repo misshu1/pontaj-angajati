@@ -1,9 +1,9 @@
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 import { auth, getSessionToken } from '~/firebase.server';
 
-const sessionSecret = process.env.SESSION_SECRET_AUTH;
+const sessionSecret = process.env.PRIVATE_SESSION_SECRET_AUTH;
 if (!sessionSecret) {
-  throw new Error('SESSION_SECRET_AUTH must be set!');
+  throw new Error('PRIVATE_SESSION_SECRET_AUTH must be set!');
 }
 
 const { getSession, commitSession, destroySession } =

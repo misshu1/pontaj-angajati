@@ -8,7 +8,6 @@ const publicKeys = [
   'FIREBASE_STORAGE_BUCKET',
   'FIREBASE_MESSAGING_SENDER_ID',
   'FIREBASE_APP_ID',
-  'FIREBASE_APPLICATION_CREDENTIALS',
 ] as const;
 
 const environmentSchema = z.object({
@@ -21,7 +20,6 @@ const environmentSchema = z.object({
   FIREBASE_STORAGE_BUCKET: z.string().min(1),
   FIREBASE_MESSAGING_SENDER_ID: z.string().min(1),
   FIREBASE_APP_ID: z.string().min(1),
-  FIREBASE_APPLICATION_CREDENTIALS: z.string().min(1),
 });
 
 type EnvironmentSchemaType = z.infer<typeof environmentSchema>;

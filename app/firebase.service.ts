@@ -1,3 +1,4 @@
+import type { FirebaseOptions } from 'firebase/app';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
@@ -11,7 +12,7 @@ import { getFirestore } from 'firebase/firestore';
 import { destroyAuthSession } from './cookies/authSession';
 import { getPublicEnv } from './ui/PublicEnv';
 
-const firebaseConfig = {
+const firebaseConfig: FirebaseOptions = {
   apiKey: getPublicEnv('FIREBASE_API_KEY'),
   authDomain: getPublicEnv('FIREBASE_AUTH_DOMAIN'),
   projectId: getPublicEnv('FIREBASE_PROJECT_ID'),

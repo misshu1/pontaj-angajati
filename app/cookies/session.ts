@@ -2,9 +2,9 @@ import { createCookieSessionStorage } from '@remix-run/node';
 import { fetchFreeDays } from '~/requests';
 import { formatDate } from '~/utils';
 
-const sessionSecret = process.env.SESSION_SECRET;
+const sessionSecret = process.env.PRIVATE_SESSION_SECRET;
 if (!sessionSecret) {
-  throw new Error('SESSION_SECRET must be set!');
+  throw new Error('PRIVATE_SESSION_SECRET must be set!');
 }
 
 const { getSession, commitSession, destroySession } =

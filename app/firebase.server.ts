@@ -1,15 +1,24 @@
+import type { AppOptions } from 'firebase-admin/app';
 import { initializeApp, getApps, cert, getApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 
 if (getApps().length === 0) {
-  if (!process.env.FIREBASE_APPLICATION_CREDENTIALS) {
-    throw new Error(`Missing 'FIREBASE_APPLICATION_CREDENTIALS' in .env file.`);
+  if (!process.env.PRIVATE_FIREBASE_KEY) {
+    throw new Error(`Missing 'PRIVATE_FIREBASE_KEY' in .env file.`);
   }
 
-  initializeApp({
-    credential: cert(require(process.env.FIREBASE_APPLICATION_CREDENTIALS)),
-  });
+  const firebaseConfig: AppOptions = {
+    credential: cert({
+      projectId: process.env.PRIVATE_FIREBASE_PROJECT_ID,
+      clientEmail: process.env.PRIVATE_FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.PRIVATE_FIREBASE_KEY?.replace(/\\n/g, '\n'),
+    }),
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  };
+
+  initializeApp(firebaseConfig);
 }
 
 const auth = getAuth(getApp());
