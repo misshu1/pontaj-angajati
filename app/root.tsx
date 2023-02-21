@@ -16,6 +16,7 @@ import { json } from '@remix-run/node'; // Depends on the runtime you choose
 
 import { ServerStyleContext, ClientStyleContext } from './context';
 import GlobalStyles from '~/styles/global.styles.css';
+import tailwindStyles from '~/styles/tailwind.css';
 import { getPublicKeys } from './environment.server';
 import { PublicEnv } from '~/ui';
 
@@ -27,6 +28,7 @@ export const meta: MetaFunction = () => ({
 
 export let links: LinksFunction = () => {
   return [
+    { rel: 'stylesheet', href: tailwindStyles },
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
     {

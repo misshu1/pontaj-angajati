@@ -32,11 +32,11 @@ const clientDB = getFirestore(getApp());
 setPersistence(clientAuth, inMemoryPersistence);
 
 async function register(email: string, password: string) {
-  return createUserWithEmailAndPassword(clientAuth, email, password);
+  return await createUserWithEmailAndPassword(clientAuth, email, password);
 }
 
 async function login(email: string, password: string) {
-  return signInWithEmailAndPassword(clientAuth, email, password);
+  return await signInWithEmailAndPassword(clientAuth, email, password);
 }
 
 async function logout(request: Request) {
