@@ -1,5 +1,5 @@
 import { Link, useFetcher } from '@remix-run/react';
-import { Button, Input, Select, Stack } from '@chakra-ui/react';
+import { Input, Select, Option, Button } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import type { FC } from 'react';
 import { monthsListValue, yearsList } from '~/utils';
@@ -26,98 +26,86 @@ export const HeaderDates: FC<HeaderDatesProps> = ({ handlePrint }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
 
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleMonthChange = (value?: string) => {
+    if (!value) return;
+
     fetcher.submit(
-      { value: e.target.value, name: e.target.name },
+      { value: value, name: 'month' },
       { method: 'post', action: '/?index' }
     );
   };
 
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleYearChange = (value?: string) => {
+    if (!value) return;
+
     fetcher.submit(
-      { value: e.target.value, name: e.target.name },
+      { value: value, name: 'year' },
       { method: 'post', action: '/?index' }
     );
   };
 
   return (
-    <Stack
-      spacing={3}
-      display='grid'
-      gridTemplateColumns='repeat(auto-fit, minmax(200px, 1fr))'
-      gap='15px'
-      flex='1'
-      padding='15px'
-      width='100%'
-      maxWidth='80rem'
-    >
+    <div className='w-full min-w-[80rem] p-4 gap-4 flex-1 grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))]'>
       <Input
-        placeholder='Nume Angajat'
+        variant='outlined'
+        size='md'
+        label='Nume Angajat'
         type='text'
         value={name}
         onChange={handleEmployeeChange}
-        size='lg'
-        marginTop='12px'
-        minWidth='200px'
+        className='min-w-[200px]'
       />
       <Select
-        size='lg'
+        variant='outlined'
+        label='Month'
         name='month'
         onChange={handleMonthChange}
-        value={data?.month}
-        minWidth='200px'
-        textTransform='capitalize'
-        isDisabled={
-          fetcher.state === 'submitting' || fetcher.state === 'loading'
-        }
+        value={data?.month.toString()}
+        className='min-w-[200px] capitalize'
+        disabled={fetcher.state === 'submitting' || fetcher.state === 'loading'}
       >
         {monthsListValue.map((monthNumber, index) => (
-          <option value={monthNumber} key={monthNumber}>
+          <Option
+            value={monthNumber.toString()}
+            key={monthNumber}
+            className='capitalize'
+          >
             {new Date(new Date().getFullYear(), index, 1).toLocaleString(
               'ro-RO',
               { month: 'long' }
             )}
-          </option>
+          </Option>
         ))}
       </Select>
       <Select
-        size='lg'
         name='year'
+        variant='outlined'
+        label='Year'
         onChange={handleYearChange}
-        value={data?.year}
-        minWidth='200px'
-        isDisabled={
-          fetcher.state === 'submitting' || fetcher.state === 'loading'
-        }
+        value={data?.year.toString()}
+        className='min-w-[200px]'
+        disabled={fetcher.state === 'submitting' || fetcher.state === 'loading'}
       >
         {yearsList.map((year) => (
-          <option value={year} key={year}>
+          <Option value={year.toString()} key={year}>
             {year}
-          </option>
+          </Option>
         ))}
       </Select>
       <Link to='/add-schedule'>
-        <Button
-          colorScheme='green'
-          size='lg'
-          width='100%'
-          minWidth='200px'
-          type='button'
-        >
+        <Button color='green' className='w-full min-w-[200px]' type='button'>
           Adauga Program
         </Button>
       </Link>
 
       <Button
-        colorScheme='yellow'
-        size='lg'
-        margin='27px 15px 0 auto'
+        color='amber'
         onClick={handlePrint}
-        minWidth='85px'
+        className='margin-[27px_15px_0_auto] min-w-[85px]'
         type='button'
       >
         Print
       </Button>
-    </Stack>
+    </div>
   );
 };

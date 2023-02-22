@@ -1,5 +1,5 @@
+import { Typography } from '@material-tailwind/react';
 import { forwardRef } from 'react';
-import { Heading, Stack } from '@chakra-ui/react';
 import { Table } from './Table';
 import { useRootData } from '~/hooks';
 
@@ -11,12 +11,12 @@ export const ComponentToPrint = forwardRef<
   const data = useRootData();
 
   return (
-    <Stack ref={ref} overflow='auto'>
-      <Heading as='h3' size='lg' textTransform='capitalize'>
+    <div ref={ref} className='overflow-auto'>
+      <Typography variant='h3' className='capitalize'>
         {data?.employee}
-      </Heading>
+      </Typography>
       <Table />
-    </Stack>
+    </div>
   );
 });
 

@@ -1,15 +1,4 @@
 import { useCallback } from 'react';
-import {
-  Table as ChackraTable,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  Text,
-  Stack,
-} from '@chakra-ui/react';
 import type { ScheduleLegendId } from '~/models';
 import { EmptyTable } from '~/components';
 import { useRootData } from '~/hooks';
@@ -35,105 +24,88 @@ export const Table = () => {
   if (!data) return <EmptyTable />;
 
   return (
-    <ChackraTable variant='striped' size='md'>
-      <TableCaption textAlign='left'>
-        <Text
-          fontSize='sm'
-          color='#000'
-          as='span'
-          margin='0 !important'
-          fontWeight={900}
-        >
-          Legenda
-        </Text>
-        <Stack
-          display='grid'
-          gridTemplateColumns='repeat(3, 200px)'
-          gridAutoFlow='column'
-          gridTemplateRows='repeat(5, 20px)'
-          className='legend-items'
-        >
-          {data?.scheduleLegend.map((item) => (
-            <Text
-              key={item.id}
-              fontSize='sm'
-              color='#909090'
-              as='span'
-              margin='0 !important'
-            >
-              <Text
-                textTransform='uppercase'
-                fontWeight={900}
-                color='#000'
-                as='span'
+    <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>
+      <table className='w-full text-sm text-gray-900'>
+        <thead className='text-xs uppercase bg-gray-50'>
+          <tr>
+            <th scope='col'>
+              <div className='flex flex-col'>
+                <span>Total</span>
+                <span>{data.monthSchedule.at(-1)?.totalHours}h</span>
+              </div>
+            </th>
+            {data.monthSchedule.map(
+              ({ day, weekDayName, monthName, duration }) => (
+                <th key={day} className={!duration ? 'empty' : ''}>
+                  <div className='flex flex-col'>
+                    <span>{weekDayName}</span>
+                    <span>
+                      {day}/{monthName}
+                    </span>
+                  </div>
+                </th>
+              )
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          <tr className='bg-blue-gray-50'>
+            <th className='font-medium whitespace-nowrap'>Inceput</th>
+            {data.monthSchedule.map(({ day, start, duration, eventType }) => (
+              <td
+                key={day}
+                className={`${!duration ? 'empty' : ''} 
+                ${eventType ? 'font-black' : 'font-normal'}
+                `}
               >
-                {item.id}
-              </Text>{' '}
-              - {item.name}
-            </Text>
-          ))}
-        </Stack>
-      </TableCaption>
-      <Thead>
-        <Tr>
-          <Th>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span>Total</span>
-              <span>{data.monthSchedule.at(-1)?.totalHours}h</span>
-            </div>
-          </Th>
-          {data.monthSchedule.map(
-            ({ day, weekDayName, monthName, duration }) => (
-              <Th key={day} className={!duration ? 'empty' : ''}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span>{weekDayName}</span>
-                  <span>
-                    {day}/{monthName}
-                  </span>
-                </div>
-              </Th>
-            )
-          )}
-        </Tr>
-      </Thead>
-      <Tbody>
-        <Tr>
-          <Td>Inceput</Td>
-          {data.monthSchedule.map(({ day, start, duration, eventType }) => (
-            <Td
-              key={day}
-              className={!duration ? 'empty' : ''}
-              fontWeight={eventType ? 900 : 400}
-            >
-              {renderValue(eventType, start)}
-            </Td>
-          ))}
-        </Tr>
-        <Tr>
-          <Td>Sfarsit</Td>
-          {data.monthSchedule.map(({ day, end, duration, eventType }) => (
-            <Td
-              key={day}
-              className={!duration ? 'empty' : ''}
-              fontWeight={eventType ? 900 : 400}
-            >
-              {renderValue(eventType, end)}
-            </Td>
-          ))}
-        </Tr>
-        <Tr>
-          <Td>Ore</Td>
-          {data.monthSchedule.map(({ day, duration, eventType }) => (
-            <Td
-              key={day}
-              className={!duration ? 'empty' : ''}
-              fontWeight={eventType ? 900 : 400}
-            >
-              {renderValue(eventType, duration)}
-            </Td>
-          ))}
-        </Tr>
-      </Tbody>
-    </ChackraTable>
+                {renderValue(eventType, start)}
+              </td>
+            ))}
+          </tr>
+          <tr className='bg-white'>
+            <th className='font-medium whitespace-nowrap'>Sfarsit</th>
+            {data.monthSchedule.map(({ day, end, duration, eventType }) => (
+              <td
+                key={day}
+                className={`${!duration ? 'empty' : ''} 
+                ${eventType ? 'font-black' : 'font-normal'}
+                `}
+              >
+                {renderValue(eventType, end)}
+              </td>
+            ))}
+          </tr>
+          <tr className='bg-blue-gray-50'>
+            <th className='font-medium whitespace-nowrap'>Ore</th>
+            {data.monthSchedule.map(({ day, duration, eventType }) => (
+              <td
+                key={day}
+                className={`${!duration ? 'empty' : ''} 
+                ${eventType ? 'font-black' : 'font-normal'}
+                `}
+              >
+                {renderValue(eventType, duration)}
+              </td>
+            ))}
+          </tr>
+        </tbody>
+        <caption
+          className='text-left caption-side-bottom mt-4'
+          style={{ captionSide: 'bottom' }}
+        >
+          <span className='text-sm text-black font-black'>Legenda</span>
+          <div className='grid grid-cols-[repeat(3,_200px)] grid-flow-col grid-rows-[repeat(5,_20px)] print:grid-rows-[repeat(5,_10pt)_!important]'>
+            {data?.scheduleLegend.map((item) => (
+              <span key={item.id} className='text-sm text-gray-600'>
+                <span className='text-black font-black uppercase'>
+                  {item.id}
+                </span>{' '}
+                - {item.name}
+              </span>
+            ))}
+          </div>
+        </caption>
+      </table>
+    </div>
   );
 };

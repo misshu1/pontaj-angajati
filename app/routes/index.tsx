@@ -94,9 +94,9 @@ export default function Index() {
 
   return (
     <>
-      <div style={{ display: 'flex', gap: '15px', overflow: 'auto' }}>
-        <HeaderDates handlePrint={handlePrint} />
-      </div>
+      {/* <div style={{ display: 'flex', gap: '15px', overflow: 'auto' }}> */}
+      <HeaderDates handlePrint={handlePrint} />
+      {/* </div> */}
       <ComponentToPrint ref={componentRef} />
     </>
   );

@@ -64,48 +64,48 @@ export const scheduleLegend: ScheduleLegendType[] = [
 ];
 
 export const scheduledEvents: ScheduleEventType[] = [
-  //   {
-  //     day: 3,
-  //     month: 2,
-  //     year: 2023,
-  //     eventType: 'B',
-  //   },
-  //   {
-  //     day: 4,
-  //     month: 2,
-  //     year: 2023,
-  //     eventType: 'B',
-  //   },
-  //   {
-  //     day: 5,
-  //     month: 2,
-  //     year: 2023,
-  //     eventType: 'B',
-  //   },
-  //   {
-  //     day: 19,
-  //     month: 2,
-  //     year: 2023,
-  //     eventType: 'L',
-  //   },
-  //   {
-  //     day: 20,
-  //     month: 2,
-  //     year: 2023,
-  //     eventType: 'L',
-  //   },
-  //   {
-  //     day: 21,
-  //     month: 2,
-  //     year: 2023,
-  //     eventType: 'L',
-  //   },
-  //   {
-  //     day: 22,
-  //     month: 2,
-  //     year: 2023,
-  //     eventType: 'L',
-  //   },
+  {
+    day: 3,
+    month: 2,
+    year: 2023,
+    eventType: 'B',
+  },
+  {
+    day: 4,
+    month: 2,
+    year: 2023,
+    eventType: 'B',
+  },
+  {
+    day: 5,
+    month: 2,
+    year: 2023,
+    eventType: 'B',
+  },
+  {
+    day: 19,
+    month: 2,
+    year: 2023,
+    eventType: 'L',
+  },
+  {
+    day: 20,
+    month: 2,
+    year: 2023,
+    eventType: 'L',
+  },
+  {
+    day: 21,
+    month: 2,
+    year: 2023,
+    eventType: 'L',
+  },
+  {
+    day: 22,
+    month: 2,
+    year: 2023,
+    eventType: 'L',
+  },
 ];
 
 export const initialWeekSchedule: WeekSchedule = {

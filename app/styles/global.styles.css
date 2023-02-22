@@ -10,7 +10,6 @@ html, body {
 
 table, th, td {
     border: 1px solid #EDF2F7;
-    background:#fff;
 }
 
 th, td {
@@ -43,7 +42,6 @@ th:is(.empty), td:is(.empty) {
 
     table, th, td {
         border: 1px solid #EDF2F7;
-        background:#fff;
     }
 
     
@@ -52,9 +50,6 @@ th:is(.empty), td:is(.empty) {
         border-color: #dfe5ed !important;
     }
 
-    .legend-items {
-        grid-template-rows: repeat(5, 10pt) !important;
-    }
 
     @page { 
         /* size: 11.69in 8.27in; */
