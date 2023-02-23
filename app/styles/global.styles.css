@@ -30,8 +30,8 @@ th:is(.empty), td:is(.empty) {
         box-sizing: border-box;
         display: table;
         table-layout: fixed;
-        margin: 10pt ;
-        padding: 0;
+        margin: 0pt ;
+        padding: 0pt;
         height: auto;
     }
 

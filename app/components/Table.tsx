@@ -54,9 +54,9 @@ export const Table = () => {
             {data.monthSchedule.map(({ day, start, duration, eventType }) => (
               <td
                 key={day}
-                className={`${!duration ? 'empty' : ''} 
-                ${eventType ? 'font-black' : 'font-normal'}
-                `}
+                className={`${!duration ? 'empty' : ''} ${
+                  eventType ? 'font-black' : 'font-normal'
+                }`}
               >
                 {renderValue(eventType, start)}
               </td>
@@ -67,9 +67,9 @@ export const Table = () => {
             {data.monthSchedule.map(({ day, end, duration, eventType }) => (
               <td
                 key={day}
-                className={`${!duration ? 'empty' : ''} 
-                ${eventType ? 'font-black' : 'font-normal'}
-                `}
+                className={`${!duration ? 'empty' : ''} ${
+                  eventType ? 'font-black' : 'font-normal'
+                }`}
               >
                 {renderValue(eventType, end)}
               </td>
@@ -80,9 +80,9 @@ export const Table = () => {
             {data.monthSchedule.map(({ day, duration, eventType }) => (
               <td
                 key={day}
-                className={`${!duration ? 'empty' : ''} 
-                ${eventType ? 'font-black' : 'font-normal'}
-                `}
+                className={`${!duration ? 'empty' : ''} ${
+                  eventType ? 'font-black' : 'font-normal'
+                }`}
               >
                 {renderValue(eventType, duration)}
               </td>
